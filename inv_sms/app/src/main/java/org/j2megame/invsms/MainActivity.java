@@ -1,8 +1,9 @@
 package org.j2megame.invsms;
 
-import android.support.v7.app.AppCompatActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.TextView;
+import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -14,17 +15,8 @@ public class MainActivity extends AppCompatActivity {
         init();
     }
 
-    private TextView mTextView;
-    private SMSBroadcastReceiver mSMSBroadcastReceiver;
-
-    private void init(){
-        mTextView=(TextView) findViewById(R.id.textView);
-        mSMSBroadcastReceiver=new SMSBroadcastReceiver();
-        mSMSBroadcastReceiver.setOnReceivedMessageListener(new SMSBroadcastReceiver.MessageListener() {
-            @Override
-            public void OnReceived(String message) {
-                mTextView.setText(message);
-            }
-        });
+    private void init() {
+        Intent startIntent = new Intent(this, SMSService.class);
+        startService(startIntent);
     }
 }
