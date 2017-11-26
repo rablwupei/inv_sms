@@ -21,7 +21,7 @@ import cz.msebera.android.httpclient.protocol.HTTP;
 public class Weixin {
 
     public static class Message {
-        public String touser = "wupei";
+        public String touser = "wupei|gaolisi";
         public String message;
 
         public Message(String message) {
