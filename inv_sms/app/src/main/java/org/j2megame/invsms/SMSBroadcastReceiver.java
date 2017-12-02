@@ -19,7 +19,7 @@ import android.telephony.SmsMessage;
 
 public class SMSBroadcastReceiver extends BroadcastReceiver {
 
-    private static MessageListener _messageListener;
+    private MessageListener _messageListener;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -47,7 +47,7 @@ public class SMSBroadcastReceiver extends BroadcastReceiver {
         void OnReceived(String message);
     }
 
-    public static void setOnReceivedMessageListener(MessageListener messageListener) {
+    public void setOnReceivedMessageListener(MessageListener messageListener) {
         _messageListener = messageListener;
     }
 }

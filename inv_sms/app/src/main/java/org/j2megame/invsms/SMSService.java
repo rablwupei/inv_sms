@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -23,26 +24,32 @@ public class SMSService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        SMSBroadcastReceiver.setOnReceivedMessageListener(new SMSBroadcastReceiver.MessageListener() {
-            @Override
-            public void OnReceived(String message) {
-                Weixin.send(new Weixin.Message(message));
-            }
-        });
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            Notification notification = new Notification.Builder(this.getApplicationContext())
-                    .setAutoCancel(false)
-                    .setOngoing(true)
-                    .build();
-            notification.flags = notification.flags | Notification.FLAG_NO_CLEAR | Notification.FLAG_ONGOING_EVENT;
-            startForeground(1, notification);
-        }
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,0,notificationIntent,0);
+        Notification.Builder builder = new Notification.Builder(this.getApplicationContext());
+        builder.setContentTitle("***服务");
+        builder.setContentText("请勿关闭，***");
+        builder.setContentIntent(pendingIntent);
+        Notification notification = builder.getNotification();
+        startForeground(1,notification);//启动前台服务
     }
 
+    SMSBroadcastReceiver _receiver;
+
     @Override
-    public void onDestroy() {
-        stopForeground(true);
-        super.onDestroy();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        if (_receiver == null) {
+            _receiver = new SMSBroadcastReceiver();
+            _receiver.setOnReceivedMessageListener(new SMSBroadcastReceiver.MessageListener() {
+                @Override
+                public void OnReceived(String message) {
+                    Weixin.send(new Weixin.Message(message));
+                }
+            });
+            IntentFilter filter = new IntentFilter("android.provider.Telephony.SMS_RECEIVED");
+            registerReceiver(_receiver, filter);
+        }
+        return START_STICKY;
     }
 
     @Nullable
@@ -51,4 +58,10 @@ public class SMSService extends Service {
         return null;
     }
 
+    @Override
+    public void onDestroy() {
+        stopForeground(true);//停止前台服务
+        unregisterReceiver(_receiver);
+        super.onDestroy();
+    }
 }
