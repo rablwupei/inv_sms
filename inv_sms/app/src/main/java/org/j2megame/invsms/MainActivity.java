@@ -7,8 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static MainActivity instance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        instance = this;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

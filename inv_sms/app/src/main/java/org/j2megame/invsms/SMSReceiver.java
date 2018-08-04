@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.telephony.SmsMessage;
 /**
  * 配置广播接收者:
- *  <receiver android:name=".SMSBroadcastReceiver">
+ *  <receiver android:name=".SMSReceiver">
  *     <intent-filter android:priority="1000">
  *         <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
  *     </intent-filter>
@@ -17,7 +17,7 @@ import android.telephony.SmsMessage;
  *  设置此广播接收者的级别为最高
  */
 
-public class SMSBroadcastReceiver extends BroadcastReceiver {
+public class SMSReceiver extends BroadcastReceiver {
 
     private MessageListener _messageListener;
 
